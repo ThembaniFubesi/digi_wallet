@@ -49,4 +49,14 @@ class CardRepositoryImpl implements CardRepository {
     await datasource.update(cardModel);
     return card;
   }
+
+  @override
+  Future<Either<Failure, CardEntity>> findByCardNumber(
+      String cardNumber) async {
+    final cardModel = await datasource.findByCardNumber(cardNumber);
+    if (cardModel != null) {
+      return Right(cardModel.toEntity());
+    }
+    return Left(DataError(message: 'No card found'));
+  }
 }

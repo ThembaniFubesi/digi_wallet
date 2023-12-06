@@ -1,3 +1,4 @@
+import 'package:digi_wallet/core/common/domain/enums/card_type.dart';
 import 'package:equatable/equatable.dart';
 
 class CardEntity extends Equatable {
@@ -8,7 +9,20 @@ class CardEntity extends Equatable {
   final String issuingCountry;
 
   String get type {
-    return cardNumber.isEmpty ? 'test' : 'test';
+    if (cardNumber.isEmpty) {
+      return '';
+    }
+
+    if (cardNumber[0] == '5' || cardNumber[0] == '2') {
+      return CardType.masterCard.name;
+    }
+    if (cardNumber[0] == '4') {
+      return CardType.visa.name;
+    }
+    if (cardNumber[0] == '3') {
+      return CardType.american.name;
+    }
+    return '';
   }
 
   const CardEntity({

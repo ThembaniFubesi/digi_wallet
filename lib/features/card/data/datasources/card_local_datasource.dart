@@ -18,6 +18,10 @@ class CardLocalDatasource {
     return cardBox.get(id);
   }
 
+    Future<CardModel?> findByCardNumber(String cardNumber) async {
+    return cardBox.values.where((card) => card.cardNumber == cardNumber).firstOrNull;
+  }
+
   Future<void> update(CardModel card) async {
     if (await find(card.id) != null) {
       cardBox.put(card.id, card);

@@ -15,7 +15,9 @@ class AppRouter {
           ),
           GoRoute(
             path: ':cardId',
-            builder: (context, state) => const CardScreen(),
+            builder: (context, state) => CardScreen(
+              cardId: state.pathParameters['cardId'],
+            ),
           ),
         ],
       ),

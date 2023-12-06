@@ -9,6 +9,7 @@ sealed class UpdateCardEvent extends Equatable {
 
 class UpdateCard extends UpdateCardEvent {
   final CardEntity card;
+  final bool isCardNumberChanged;
 
-  const UpdateCard({required this.card});
+  const UpdateCard(this.isCardNumberChanged, {required this.card});
 }

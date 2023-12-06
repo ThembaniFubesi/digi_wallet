@@ -1,4 +1,6 @@
+import 'package:digi_wallet/core/common/presentation/bloc/country_list/country_list_bloc.dart';
 import 'package:digi_wallet/features/card/presentation/bloc/add_card/add_card_bloc.dart';
+import 'package:digi_wallet/features/card/presentation/bloc/card/card_bloc.dart';
 import 'package:digi_wallet/features/card/presentation/bloc/card_list/card_list_bloc.dart'
     as card_list;
 import 'package:digi_wallet/features/card/presentation/bloc/update_card/update_card_bloc.dart';
@@ -12,17 +14,22 @@ class CardScreen extends StatelessWidget {
   final String? cardId;
 
   const CardScreen({super.key, this.cardId});
-  
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<CountryListBloc>(
+          create: (context) => sl<CountryListBloc>()..add(LoadCountryList()),
+        ),
         BlocProvider<AddCardBloc>(
           create: (context) => sl<AddCardBloc>(),
         ),
         BlocProvider<UpdateCardBloc>(
           create: (context) => sl<UpdateCardBloc>(),
+        ),
+        BlocProvider<CardBloc>(
+          create: (context) => sl<CardBloc>(),
         ),
       ],
       child: MultiBlocListener(
@@ -37,6 +44,20 @@ class CardScreen extends StatelessWidget {
                 );
 
                 context.pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'New card has been added. Swipe left to remove a card. Click on the card to edit'),
+                    duration: Duration(seconds: 6),
+                    showCloseIcon: true,
+                  ),
+                );
+              } else if (state is AddCardFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                  ),
+                );
               }
             },
           ),
@@ -48,8 +69,21 @@ class CardScreen extends StatelessWidget {
                     payload: state.card,
                   ),
                 );
-
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Card has been updated. Swipe left to remove a card. Click on the card to edit'),
+                    duration: Duration(seconds: 6),
+                    showCloseIcon: true,
+                  ),
+                );
                 context.pop();
+              } else if (state is UpdateCardFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                  ),
+                );
               }
             },
           ),
@@ -58,5 +92,4 @@ class CardScreen extends StatelessWidget {
       ),
     );
   }
-
 }
